@@ -308,7 +308,7 @@ export default function PubGolfScorecardApp() {
             ...cardStyle(),
             padding: 0,
             overflow: "hidden",
-            background: "linear-gradient(135deg, rgba(249,115,22,0.95), rgba(236,72,153,0.88), rgba(59,130,246,0.82))",
+            background: "none",
           }}
         >
           <div style={{ padding: 24 }}>
@@ -322,7 +322,6 @@ export default function PubGolfScorecardApp() {
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <span style={chipStyle()}>🏁 {holes.length} holes</span>
                 <span style={chipStyle()}>👥 {players.length} players</span>
-                <span style={chipStyle()}>📱 mobile friendly</span>
               </div>
             </div>
           </div>
