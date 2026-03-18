@@ -65,7 +65,7 @@ const defaultHoles: Hole[] = Array.from({ length: 9 }, (_, index) => ({
   color: holeColors[index % holeColors.length],
 }));
 
-const defaultPlayers = ["Kalli", "Júlli", "Ási", "Ronni"];
+const defaultPlayers = ["Kalli", "Júlli", "Ási", "Ronni", "Gunni"];
 
 function makeInitialScores(players: string[], holes: Hole[]): Scores {
   const scores: Scores = {};
