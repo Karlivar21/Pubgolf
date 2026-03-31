@@ -104,6 +104,8 @@ localStorage.setItem(
 
 
 
+
+
 function normalizeData(data: any) {
   const holes: Hole[] = Array.isArray(data?.holes) && data.holes.length
     ? data.holes.map((hole: Hole, index: number) => ({
@@ -197,6 +199,17 @@ export default function PubGolfScorecardApp() {
   const [selectedPlayer, setSelectedPlayer] = useState(defaultPlayers[0]);
   const [activeTab, setActiveTab] = useState<TabKey>("leaderboard");
 
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) {
+    const parsed = JSON.parse(raw);
+    if (parsed.version === DATA_VERSION) {
+      const normalized = normalizeData(parsed);
+      setPlayers(normalized.players);
+      setHoles(normalized.holes);
+      setScores(normalized.scores);
+      setSelectedPlayer(normalized.players[0] || "");
+    }
+  }
   useEffect(() => {
     const raw = localStorage.getItem("pubgolf-scorecard-v2");
     if (!raw) return;
