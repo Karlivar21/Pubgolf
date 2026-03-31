@@ -254,51 +254,7 @@ export default function PubGolfScorecardApp() {
     setSelectedPlayer(nextPlayers[0] || "");
   };
 
-  const addHole = () => {
-    const id = Date.now();
-    const holeIndex = holes.length;
-    const hole: Hole = {
-      id,
-      name: `Hole ${holeIndex + 1}`,
-      venue: newVenue.trim() || `Bar ${holeIndex + 1}`,
-      par: 3,
-      image: placeholderBarImages[holeIndex % placeholderBarImages.length],
-      color: holeColors[holeIndex % holeColors.length],
-      rules: holeRules[holeIndex % holeRules.length],
-    };
-    setHoles((prev) => [...prev, hole]);
-    setScores((prev) => {
-      const copy = { ...prev };
-      players.forEach((player) => {
-        copy[player] = { ...copy[player], [id]: { score: 0, notes: "" } };
-      });
-      return copy;
-    });
-    setNewVenue("");
-  };
 
-  const removeHole = (holeId: number) => {
-    setHoles((prev) => prev.filter((h) => h.id !== holeId));
-    setScores((prev) => {
-      const copy = { ...prev };
-      Object.keys(copy).forEach((player) => {
-        const playerScores = { ...copy[player] };
-        delete playerScores[holeId];
-        copy[player] = playerScores;
-      });
-      return copy;
-    });
-  };
-
-  const updateHole = (holeId: number, field: keyof Hole, value: string) => {
-    setHoles((prev) => prev.map((hole) => (
-      hole.id === holeId
-        ? { ...hole, [field]: field === "par" ? Math.max(1, Number(value) || 1) : value }
-        : hole
-    )));
-  };
-
-  const resetAll = () => setScores(makeInitialScores(players, holes));
 
   const playerSummary = useMemo(() => {
   if (!selectedPlayer) return 0;
