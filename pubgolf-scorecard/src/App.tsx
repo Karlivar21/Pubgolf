@@ -181,7 +181,6 @@ export default function PubGolfScorecardApp() {
   const [holes, setHoles] = useState<Hole[]>(defaultHoles);
   const [scores, setScores] = useState<Scores>(makeInitialScores(defaultPlayers, defaultHoles));
   const [newPlayer, setNewPlayer] = useState("");
-  const [newVenue, setNewVenue] = useState("");
   const [selectedPlayer, setSelectedPlayer] = useState(defaultPlayers[0]);
   const [activeTab, setActiveTab] = useState<TabKey>("leaderboard");
 
