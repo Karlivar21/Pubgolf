@@ -94,17 +94,6 @@ function makeInitialScores(players: string[], holes: Hole[]): Scores {
   return scores;
 }
 
-const STORAGE_KEY = "pubgolf-scorecard";
-const DATA_VERSION = 3;
-
-localStorage.setItem(
-  STORAGE_KEY,
-  JSON.stringify({ version: DATA_VERSION, players: defaultPlayers, holes: defaultHoles, scores: makeInitialScores(defaultPlayers, defaultHoles) })
-);
-
-
-
-
 
 function normalizeData(data: any) {
   const holes: Hole[] = Array.isArray(data?.holes) && data.holes.length
@@ -199,19 +188,8 @@ export default function PubGolfScorecardApp() {
   const [selectedPlayer, setSelectedPlayer] = useState(defaultPlayers[0]);
   const [activeTab, setActiveTab] = useState<TabKey>("leaderboard");
 
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (raw) {
-    const parsed = JSON.parse(raw);
-    if (parsed.version === DATA_VERSION) {
-      const normalized = normalizeData(parsed);
-      setPlayers(normalized.players);
-      setHoles(normalized.holes);
-      setScores(normalized.scores);
-      setSelectedPlayer(normalized.players[0] || "");
-    }
-  }
   useEffect(() => {
-    const raw = localStorage.getItem("pubgolf-scorecard-v2");
+    const raw = localStorage.getItem("pubgolf-scorecard-v3");
     if (!raw) return;
     try {
       const parsed = JSON.parse(raw);
@@ -226,7 +204,7 @@ export default function PubGolfScorecardApp() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("pubgolf-scorecard-v2", JSON.stringify({ players, holes, scores }));
+    localStorage.setItem("pubgolf-scorecard-v3", JSON.stringify({ players, holes, scores }));
   }, [players, holes, scores]);
 
   const leaderboard = useMemo(() => {
