@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+
+
+
 type Hole = {
   id: number;
   name: string;
@@ -90,6 +93,16 @@ function makeInitialScores(players: string[], holes: Hole[]): Scores {
   });
   return scores;
 }
+
+const STORAGE_KEY = "pubgolf-scorecard";
+const DATA_VERSION = 3;
+
+localStorage.setItem(
+  STORAGE_KEY,
+  JSON.stringify({ version: DATA_VERSION, players: defaultPlayers, holes: defaultHoles, scores: makeInitialScores(defaultPlayers, defaultHoles) })
+);
+
+
 
 function normalizeData(data: any) {
   const holes: Hole[] = Array.isArray(data?.holes) && data.holes.length
