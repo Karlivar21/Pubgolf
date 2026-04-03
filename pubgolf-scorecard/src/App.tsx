@@ -23,7 +23,7 @@ const generalRules = [
   "Regla 2: Ef þú missir af bar þá er það par + 2.",
   "Regla 3: Ef þú ælir þá er það + 2 á þeim bar",
   "Regla 4: Ef þú sullar drykknum þínum eða drykk hjá öðrum þá er það +1 fyrir hvern drykk sem þú sullar.",
-  "Regla 5: Verða 3O-40 mínútur á hverri holu fer eftir pari nema á holu 9.",
+  "Regla 5: Það er 3O-40 mínútur á hverjum bar fer eftir pari nema á holu 9.",
 ];
 
 type Scores = Record<string, Record<number, HoleScore>>;
@@ -495,6 +495,47 @@ export default function PubGolfScorecardApp() {
             </div>
           </div>
         )}
+        {activeTab === "players" && (
+          <div style={cardStyle()}>
+            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 16 }}>Fyllibyttur</div>
+
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+              <input
+                style={{ ...inputStyle(), flex: 1, minWidth: 220 }}
+                value={newPlayer}
+                onChange={(e) => setNewPlayer(e.target.value)}
+                placeholder="Add player"
+                onKeyDown={(e) => e.key === "Enter" && addPlayer()}
+              />
+              <button type="button" onClick={addPlayer} style={buttonStyle(false)}>
+                Add Fyllibyttu
+              </button>
+            </div>
+
+            <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
+              {players.map((player) => (
+                <div
+                  key={player}
+                  style={{
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: 18,
+                    padding: 16,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 12,
+                    background: "rgba(255,255,255,0.04)",
+                  }}
+                >
+                  <div style={{ fontWeight: 700 }}>{player}</div>
+                  <button type="button" onClick={() => removePlayer(player)} style={buttonStyle(false)}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          )}
 
         {activeTab === "holes" && (
           <div style={{ display: "grid", gap: 16 }}>
