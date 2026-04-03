@@ -18,6 +18,14 @@ type HoleScore = {
   notes: string;
 };
 
+const generalRules = [
+  "Regla 1: Ef þú nærð ekki að klára par þá er það par + 2",
+  "Regla 2: Ef þú missir af bar þá er það par + 2.",
+  "Regla 3: Ef þú ælir þá er það + 2 á þeim bar",
+  "Regla 4: Ef þú sullar drykknum þínum eða drykk hjá öðrum þá er það +1 fyrir hvern drykk sem þú sullar.",
+  "Regla 5: Verða 3O-40 mínútur á hverri holu fer eftir pari nema á holu 9.",
+];
+
 type Scores = Record<string, Record<number, HoleScore>>;
 
 type TabKey = "leaderboard" | "scorecard" | "players" | "holes";
@@ -81,7 +89,7 @@ const defaultHoles: Hole[] = Array.from({ length: 9 }, (_, index) => ({
   rules: holeRules[index],
 }));
 
-const defaultPlayers = ["Kalli", "Júlli", "Jonny", "Ronni", "Görn", "Gylfi", "Tommy", "Bjössi"];
+const defaultPlayers = ["Kalli", "Júlli", "Jonny", "Ronni", "Görn", "Nike", "Tommy", "Bjössi"];
 
 function makeInitialScores(players: string[], holes: Hole[]): Scores {
   const scores: Scores = {};
@@ -488,50 +496,43 @@ export default function PubGolfScorecardApp() {
           </div>
         )}
 
-        {activeTab === "players" && (
-          <div style={cardStyle()}>
-            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 16 }}>Fyllibyttur</div>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
-              <input style={{ ...inputStyle(), flex: 1, minWidth: 220 }} value={newPlayer} onChange={(e) => setNewPlayer(e.target.value)} placeholder="Add player" onKeyDown={(e) => e.key === "Enter" && addPlayer()} />
-              <button type="button" onClick={addPlayer} style={buttonStyle(false)}>Add Fyllibyttu</button>
+        {activeTab === "holes" && (
+          <div style={{ display: "grid", gap: 16 }}>
+            <div style={cardStyle()}>
+              <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 12 }}>📜 Almennar reglur</div>
+              <ul style={{ margin: 0, paddingLeft: 20, color: "#cbd5e1", lineHeight: 1.8 }}>
+                {generalRules.map((rule, index) => (
+                  <li key={index}>{rule}</li>
+                ))}
+              </ul>
             </div>
-            <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
-              {players.map((player) => (
-                <div key={player} style={{ border: "1px solid rgba(255,255,255,0.12)", borderRadius: 18, padding: 16, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.04)" }}>
-                  <div style={{ fontWeight: 700 }}>{player}</div>
-                  <button type="button" onClick={() => removePlayer(player)} style={buttonStyle(false)}>Remove</button>
+
+            <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}>
+              {holes.map((hole, idx) => (
+                <div key={hole.id} style={{ ...cardStyle(), padding: 0, overflow: "hidden" }}>
+                  <img
+                    src={hole.image}
+                    alt={hole.venue}
+                    style={{ width: "100%", height: 220, objectFit: "contain", background: "#fff", display: "block", padding: 14 }}
+                    onError={(e) => {
+                      e.currentTarget.src = placeholderBarImages[idx % placeholderBarImages.length];
+                    }}
+                  />
+                  <div style={{ background: hole.color, padding: "10px 16px", fontWeight: 800, color: "#fff" }}>
+                    Hole {idx + 1} · {hole.venue}
+                  </div>
+                  <div style={{ padding: 16, display: "grid", gap: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                      <div style={{ fontSize: 20, fontWeight: 800 }}>{hole.name}</div>
+                      <span style={chipStyle()}>Par {hole.par}</span>
+                    </div>
+                    <div style={{ color: "#cbd5e1", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>
+                      <strong style={{ color: "#fff" }}>Rules:</strong> {hole.rules}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {activeTab === "holes" && (
-          <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}>
-            {holes.map((hole, idx) => (
-              <div key={hole.id} style={{ ...cardStyle(), padding: 0, overflow: "hidden" }}>
-                <img
-                  src={hole.image}
-                  alt={hole.venue}
-                  style={{ width: "100%", height: 220, objectFit: "contain", background: "#fff", display: "block", padding: 14 }}
-                  onError={(e) => {
-                    e.currentTarget.src = placeholderBarImages[idx % placeholderBarImages.length];
-                  }}
-                />
-                <div style={{ background: hole.color, padding: "10px 16px", fontWeight: 800, color: "#fff" }}>
-                  Hole {idx + 1} · {hole.venue}
-                </div>
-                <div style={{ padding: 16, display: "grid", gap: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-                    <div style={{ fontSize: 20, fontWeight: 800 }}>{hole.name}</div>
-                    <span style={chipStyle()}>Par {hole.par}</span>
-                  </div>
-                  <div style={{ color: "#cbd5e1", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>
-                    <strong style={{ color: "#fff" }}>Rules:</strong> {hole.rules}
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         )}
       </div>
